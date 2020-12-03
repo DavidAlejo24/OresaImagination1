@@ -9,12 +9,14 @@ import { InertiaForm } from 'laravel-jetstream';
 import PortalVue from 'portal-vue';
 import Vuesax from 'vuesax';
 import 'vuesax/dist/vuesax.css';
+import TablaGeneralEjemplo from './Components/Tabla';
 
 Vue.use(Vuesax);
 Vue.mixin({ methods: { route } });
 Vue.use(InertiaApp);
 Vue.use(InertiaForm);
 Vue.use(PortalVue);
+Vue.component('TablaGeneralEjemplo', TablaGeneralEjemplo);
 
 const app = document.getElementById('app');
 

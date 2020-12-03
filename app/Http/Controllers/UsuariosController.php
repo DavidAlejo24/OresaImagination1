@@ -7,11 +7,31 @@ use Illuminate\Http\Request;
 
 class UsuariosController extends Controller
 {
-    function visualizar(){
+    function listar(){
+        /*"SELECT * FROM usuarios"*/
         return Usuarios::all();
     }
     function eliminar($id){
         //ORM DE LARAVEL
+        /*"DELETE FROM usuarios WHERE id=$id";*/
         Usuarios::destroy($id);
+    }
+    function crear(Request $rq){
+        //ORM DE LARAVEL
+        /*"DELETE FROM usuarios WHERE id=$id";*/
+        $us = new Usuarios();
+        $us->nombre = $rq->nombre;
+        $us->apellido = $rq->apellido;
+        $us->edad = $rq->edad;
+        $us->direccion = $rq->direccion;
+        $us->save();
+    }
+    function editar(Request $rq){
+        $us = Usuarios::find($rq->id);
+        $us->nombre = $rq->nombre;
+        $us->apellido = $rq->apellido;
+        $us->edad = $rq->edad;
+        $us->direccion = $rq->direccion;
+        $us->save();
     }
 }

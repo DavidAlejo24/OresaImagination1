@@ -29,7 +29,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/usuarios', function () {
 Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
     Route::group(['middleware' => ['auth', 'verified']], function () {
         //Funciones de Usuarios
-        Route::delete("/usuarios/visualizar", "App\Http\Controllers\UsuariosController@visualizar")->name("usuarios.visualizar");
+        Route::get("/usuarios/listar", "App\Http\Controllers\UsuariosController@listar")->name("usuarios.listar");
         Route::delete("/usuarios/eliminar/{id}", "App\Http\Controllers\UsuariosController@eliminar")->name("usuarios.eliminar");
+        Route::post("/usuarios/crear", "App\Http\Controllers\UsuariosController@crear")->name("usuarios.crear");
+        Route::put("/usuarios/editar", "App\Http\Controllers\UsuariosController@editar")->name("usuarios.editar");
     });
 });
