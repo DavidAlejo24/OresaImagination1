@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 
 class UsuariosController extends Controller
 {
-    function listar(){
+    function listar(Request $rq){
         /*"SELECT * FROM usuarios"*/
-        return Usuarios::all();
+        $bs = str_replace(array(" ", "-", "_"),"%",$rq->buscar);
+        return Usuarios::where("nombre", "like", "%$bs%")
+                        ->orWhere("apellido", "like", "%$bs%")
+                        ->orWhere("direccion", "like", "%$bs%")
+                        ->simplePaginate(10);
     }
     function eliminar($id){
         //ORM DE LARAVEL
