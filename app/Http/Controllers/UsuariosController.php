@@ -22,7 +22,7 @@ class UsuariosController extends Controller
         $bs = str_replace(array(" ", "-", "_"), "%", $rq->buscar);
         return Usuarios::where("nombre", "like", "%$bs%")
                         ->orWhere("apellido", "like", "%$bs%")
-                        ->orWhere("direccion", "like", "%$bs&")
+                        ->orWhere("direccion", "like", "%$bs%")
                         ->orderBy("created_at", "DESC")
                         ->simplePaginate(10);
         //where(campo, condicional, variable)
