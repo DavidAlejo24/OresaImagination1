@@ -6,13 +6,13 @@
                     <div class="flex-1 pr-4">
                         <div class="relative md:w-1/3">
                             <input type="text" class="w-full pl-10 pr-4 py-2 focus:outline-none focus:rounded-2xl focus:shadow-outline text-gray-600 font-medium inprel" placeholder="Buscar..." v-model="modal.buscar" @keyup="listarbusqueda">
-                            <i @click="modal.buscar='';listarbusqueda()" v-if="modal.buscar" class="fa fa-close closesearch text-gray-600"></i>
+                            <i @click="modal.buscar='';listarbusqueda()" v-if="modal.buscar" class="fas fa-times closesearch text-gray-600"></i>
                             <div class="absolute top-0 left-0 inline-flex items-center p-2">
                                 <i class="fa fa-search w-6 h-6 text-gray-400 mt-1"></i>
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div v-if="can('usuarios.crear')">
                         <div class="shadow rounded-lg flex">
                             <div class="relative">
                                 <button v-on:click="abrir_modal('crear')" class="rounded-lg inline-flex items-center hover:text-grey-500 focus:outline-none focus:shadow-outline text-white font-semibold py-2 px-2 md:px-4 bg-blue-900">
@@ -47,13 +47,13 @@
                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-gray-500">
                                     {{ tr.direccion }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500 opciones"> 
-                                    <button @click="abrir_modal('editar', tr)" class="focus:outline-none">
+                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500 opciones text-center"> 
+                                    <button @click="abrir_modal('editar', tr)" class="focus:outline-none espaciador" v-if="can('usuarios.ver')">
                                         <i class="fa fa-eye"></i>
-                                    </button> |
-                                    <button @click="abrir_modal('editar', tr)" class="focus:outline-none">
+                                    </button>
+                                    <button @click="abrir_modal('editar', tr)" class="focus:outline-none espaciador" v-if="can('usuarios.eliminar')">
                                         <i class="fa fa-edit"></i>
-                                    </button> |
+                                    </button>
                                     <button @click="eliminar(tr.id)" class="focus:outline-none">
                                         <i class="fa fa-trash"></i>
                                     </button>
@@ -164,7 +164,7 @@
                     if(datos.length){
                         this.modal.pagina++;
                         this.listas.usuarios = this.listas.usuarios.concat(datos);
-                        $state.loaded();
+                        $state.loaded(); 
                     }else{
                         $state.complete();
                     }
@@ -235,7 +235,9 @@
                     const rq = await axios.delete("/usuarios/eliminar/"+id);
                     this.listarbusqueda();
                 } catch (error) {
-                    console.log(error);
+                    if(error.response.status == 403){
+                        this.permisos();
+                    }
                 }
             },
             cerrar(){
@@ -247,6 +249,11 @@
                     direccion:"",
                     edad:null
                 }
+            },
+            //cuando el usuario no tiene permisos para relizar dicha acción
+            permisos(){
+                //$router.push("/");
+                window.location = "/";
             }
         }
     }
@@ -265,5 +272,8 @@
     }
     .opciones{
         width: 115px;
+    }
+    .espaciador{
+        margin-right: 4px;
     }
 </style>

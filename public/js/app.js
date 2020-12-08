@@ -5246,7 +5246,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 7:
                 _context4.prev = 7;
                 _context4.t0 = _context4["catch"](0);
-                console.log(_context4.t0);
+
+                if (_context4.t0.response.status == 403) {
+                  _this5.permisos();
+                }
 
               case 10:
               case "end":
@@ -5265,6 +5268,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         direccion: "",
         edad: null
       };
+    },
+    //cuando el usuario no tiene permisos para relizar dicha acción
+    permisos: function permisos() {
+      //$router.push("/");
+      window.location = "/";
     }
   }
 });
@@ -5340,7 +5348,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".inprel{\n  border:none!important;\n  border-bottom: 1px solid #d2d6dc!important;\n  border-radius: 0!important;\n}\n.closesearch{\n  position: absolute;\n  top: 10px;\n  right: 15px;\n  cursor: pointer;\n}\n.opciones{\n  width: 115px;\n}\n", ""]);
+exports.push([module.i, ".inprel{\n  border:none!important;\n  border-bottom: 1px solid #d2d6dc!important;\n  border-radius: 0!important;\n}\n.closesearch{\n  position: absolute;\n  top: 10px;\n  right: 15px;\n  cursor: pointer;\n}\n.opciones{\n  width: 115px;\n}\n.espaciador{\n  margin-right: 4px;\n}\n", ""]);
 
 // exports
 
@@ -5956,6 +5964,71 @@ function cloneDeep(object) {
 
     return object;
 }
+
+/***/ }),
+
+/***/ "./node_modules/laravel-permission-to-vuejs/index.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/laravel-permission-to-vuejs/index.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+	install(Vue, options) {
+		Vue.prototype.can = function(value){
+			var permissions = window.Laravel.jsPermissions.permissions;
+			var _return = false;
+			if(!Array.isArray(permissions)){
+				return false;
+			}
+			if(value.includes('|')){
+				value.split('|').forEach(function (item) {
+					if(permissions.includes(item.trim())){
+						_return = true;
+					}
+				});
+			}else if(value.includes('&')){
+				_return = true;
+				value.split('&').forEach(function (item) {
+					if(!permissions.includes(item.trim())){
+						_return = false;
+					}
+				});
+			}else{
+				_return = permissions.includes(value.trim());
+			}
+			return _return;
+		}
+		
+		Vue.prototype.is = function(value){
+			var roles = window.Laravel.jsPermissions.roles;
+			var _return = false;
+			if(!Array.isArray(roles)){
+				return false;
+			}
+			if(value.includes('|')){
+				value.split('|').forEach(function (item) {
+					if(roles.includes(item.trim())){
+						_return = true;
+					}
+				});
+			}else if(value.includes('&')){
+				_return = true;
+				value.split('&').forEach(function (item) {
+					if(!roles.includes(item.trim())){
+						_return = false;
+					}
+				});
+			}else{
+				_return = roles.includes(value.trim());
+			}
+			return _return;
+		}
+	}
+});
 
 /***/ }),
 
@@ -52565,7 +52638,7 @@ var render = function() {
                     _vm._v(" "),
                     _vm.modal.buscar
                       ? _c("i", {
-                          staticClass: "fa fa-close closesearch text-gray-600",
+                          staticClass: "fas fa-times closesearch text-gray-600",
                           on: {
                             click: function($event) {
                               _vm.modal.buscar = ""
@@ -52590,29 +52663,31 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _c("div", [
-                  _c("div", { staticClass: "shadow rounded-lg flex" }, [
-                    _c("div", { staticClass: "relative" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "rounded-lg inline-flex items-center hover:text-grey-500 focus:outline-none focus:shadow-outline text-white font-semibold py-2 px-2 md:px-4 bg-blue-900",
-                          on: {
-                            click: function($event) {
-                              return _vm.abrir_modal("crear")
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                                Agregar\n                            "
+                _vm.can("usuarios.crear")
+                  ? _c("div", [
+                      _c("div", { staticClass: "shadow rounded-lg flex" }, [
+                        _c("div", { staticClass: "relative" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "rounded-lg inline-flex items-center hover:text-grey-500 focus:outline-none focus:shadow-outline text-white font-semibold py-2 px-2 md:px-4 bg-blue-900",
+                              on: {
+                                click: function($event) {
+                                  return _vm.abrir_modal("crear")
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                Agregar\n                            "
+                              )
+                            ]
                           )
-                        ]
-                      )
+                        ])
+                      ])
                     ])
-                  ])
-                ])
+                  : _vm._e()
               ]
             ),
             _vm._v(" "),
@@ -52720,35 +52795,41 @@ var render = function() {
                           "td",
                           {
                             staticClass:
-                              "px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500 opciones"
+                              "px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500 opciones text-center"
                           },
                           [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "focus:outline-none",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.abrir_modal("editar", tr)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fa fa-eye" })]
-                            ),
-                            _vm._v(" |\n                                "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "focus:outline-none",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.abrir_modal("editar", tr)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fa fa-edit" })]
-                            ),
-                            _vm._v(" |\n                                "),
+                            _vm.can("usuarios.ver")
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "focus:outline-none espaciador",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.abrir_modal("editar", tr)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-eye" })]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.can("usuarios.eliminar")
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "focus:outline-none espaciador",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.abrir_modal("editar", tr)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-edit" })]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
                             _c(
                               "button",
                               {
@@ -94492,8 +94573,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuesax__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vuesax__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var vuesax_dist_vuesax_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuesax/dist/vuesax.css */ "./node_modules/vuesax/dist/vuesax.css");
 /* harmony import */ var vuesax_dist_vuesax_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vuesax_dist_vuesax_css__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-infinite-loading */ "./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js");
-/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(vue_infinite_loading__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-infinite-loading */ "./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js");
+/* harmony import */ var vue_infinite_loading__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vue_infinite_loading__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var laravel_permission_to_vuejs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! laravel-permission-to-vuejs */ "./node_modules/laravel-permission-to-vuejs/index.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
@@ -94505,6 +94587,8 @@ __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 
 
 
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(laravel_permission_to_vuejs__WEBPACK_IMPORTED_MODULE_7__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuesax__WEBPACK_IMPORTED_MODULE_4___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin({
   methods: {
@@ -94514,7 +94598,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.mixin({
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(_inertiajs_inertia_vue__WEBPACK_IMPORTED_MODULE_1__["InertiaApp"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(laravel_jetstream__WEBPACK_IMPORTED_MODULE_2__["InertiaForm"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(portal_vue__WEBPACK_IMPORTED_MODULE_3___default.a);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_infinite_loading__WEBPACK_IMPORTED_MODULE_7___default.a);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_infinite_loading__WEBPACK_IMPORTED_MODULE_6___default.a);
 var app = document.getElementById('app');
 new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   render: function render(h) {
@@ -94570,8 +94654,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\OresaImagination\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\OresaImagination\resources\css\app.css */"./resources/css/app.css");
+__webpack_require__(/*! C:\xampp\htdocs\laraveloresa\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\laraveloresa\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

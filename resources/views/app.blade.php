@@ -21,4 +21,10 @@
         @inertia
     </body>
     <script src="js/all.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        window.Laravel = {
+            csrfToken: "{{ csrf_token() }}",
+            jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
+        }
+    </script> 
 </html>
