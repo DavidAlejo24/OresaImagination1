@@ -52814,7 +52814,7 @@ var render = function() {
                                 )
                               : _vm._e(),
                             _vm._v(" "),
-                            _vm.can("usuarios.eliminar")
+                            _vm.can("usuarios.editar")
                               ? _c(
                                   "button",
                                   {
@@ -52830,18 +52830,20 @@ var render = function() {
                                 )
                               : _vm._e(),
                             _vm._v(" "),
-                            _c(
-                              "button",
-                              {
-                                staticClass: "focus:outline-none",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.eliminar(tr.id)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fa fa-trash" })]
-                            )
+                            _vm.can("usuarios.eliminar")
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "focus:outline-none",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminar(tr.id)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              : _vm._e()
                           ]
                         )
                       ])

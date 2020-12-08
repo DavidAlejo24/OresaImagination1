@@ -51,10 +51,10 @@
                                     <button @click="abrir_modal('editar', tr)" class="focus:outline-none espaciador" v-if="can('usuarios.ver')">
                                         <i class="fa fa-eye"></i>
                                     </button>
-                                    <button @click="abrir_modal('editar', tr)" class="focus:outline-none espaciador" v-if="can('usuarios.eliminar')">
+                                    <button @click="abrir_modal('editar', tr)" class="focus:outline-none espaciador" v-if="can('usuarios.editar')">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button @click="eliminar(tr.id)" class="focus:outline-none">
+                                    <button @click="eliminar(tr.id)" class="focus:outline-none" v-if="can('usuarios.eliminar')">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>

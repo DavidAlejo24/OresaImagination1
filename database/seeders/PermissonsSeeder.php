@@ -34,6 +34,11 @@ class PermissonsSeeder extends Seeder
         Role::find(2)->givePermissionTo(1);
         Role::find(2)->givePermissionTo(2);
         Role::find(2)->givePermissionTo(6);
-        User::first()->assignRole(2);
+
+        User::first()->assignRole(1);
+        User::find(2)->assignRole(1);
+        User::find(3)->assignRole(1);
+        User::find(4)->assignRole(1);
+        User::find(5)->assignRole(2);
     }
 }

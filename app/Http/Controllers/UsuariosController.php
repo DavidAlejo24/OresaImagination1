@@ -25,7 +25,7 @@ class UsuariosController extends Controller
                         ->orWhere("direccion", "like", "%$bs&")
                         ->orderBy("created_at", "DESC")
                         ->simplePaginate(10);
-        //where(campo, condicional, varbiable)
+        //where(campo, condicional, variable)
     }
     function eliminar($id){
         //ORM DE LARAVEL
